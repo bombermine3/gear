@@ -1,5 +1,7 @@
 #!/bin/bash
 
+curl -s https://raw.githubusercontent.com/bombermine3/cryptohamster/main/logo.sh | bash && sleep 1
+
 if [ $# -ne 1 ]; then 
 	echo "Использование:"
 	echo "gear.sh <command>"
