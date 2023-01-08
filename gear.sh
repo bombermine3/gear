@@ -12,6 +12,14 @@ if [ $# -ne 1 ]; then
 	echo ""
 fi
 
+backup() {
+	mkdir /root/gear_backup
+        cd /root/gear_backup
+        hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 > private.txt
+        cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 ./secret_ed25519
+        echo "Бэкап приватных ключей находится в /root/gear_backup"
+}
+
 case "$1" in
 install)  
 	apt update && apt -y upgrade && apt -y install wget
@@ -41,6 +49,10 @@ WantedBy=multi-user.target" > /etc/systemd/system/gear-node.service
 	systemctl enable gear-node
 	systemctl start gear-node
 
+	echo "Установка завершена"
+	echo "Проверка логов: journalctl -u gear-node -f -o cat"
+
+	backup
 	;;
 uninstall)
         systemctl stop gear-node
@@ -48,6 +60,8 @@ uninstall)
 	rm /etc/systemd/system/gear-node.service
 	rm /usr/local/bin/gear
 	rm -rf /root/.local/share/gear
+
+	echo "Удаление завершено"
         ;;
 update)
 	wget https://get.gear.rs/gear-nightly-linux-x86_64.tar.xz
@@ -56,12 +70,11 @@ update)
 	systemctl stop gear-node
         mv gear /usr/local/bin
 	systemctl start gear-node
+
+	echo "Обновление завершено"
         ;;
 backup)
-	mkdir /root/gear_backup
-	cd /root/gear_backup
-	hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 > private.txt
-	cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 ./secret_ed25519
-        ;;
+        backup
+	;;
 esac
 
