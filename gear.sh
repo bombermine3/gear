@@ -12,14 +12,6 @@ if [ $# -ne 1 ]; then
 	echo ""
 fi
 
-backup() {
-	mkdir /root/gear_backup
-        cd /root/gear_backup
-        hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 > private.txt
-        cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 ./secret_ed25519
-        echo "Бэкап приватных ключей находится в /root/gear_backup"
-}
-
 case "$1" in
 install)  
 	apt update && apt -y upgrade && apt -y install wget
@@ -51,8 +43,8 @@ WantedBy=multi-user.target" > /etc/systemd/system/gear-node.service
 
 	echo "Установка завершена"
 	echo "Проверка логов: journalctl -u gear-node -f -o cat"
-
-	backup
+        
+	echo "Сделайте бэкап приватных ключей: bash gear.sh backup"
 	;;
 uninstall)
         systemctl stop gear-node
@@ -74,7 +66,11 @@ update)
 	echo "Обновление завершено"
         ;;
 backup)
-        backup
+	mkdir /root/gear_backup > /dev/null 2>&1
+        cd /root/gear_backup
+        hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 > private.txt
+        cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 ./secret_ed25519
+        echo "Бэкап приватных ключей находится в /root/gear_backup"
 	;;
 esac
 
