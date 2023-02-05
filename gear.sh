@@ -13,7 +13,8 @@ if [ $# -ne 1 ]; then
 fi
 
 case "$1" in
-install)  
+install)
+	cd $HOME  
 	apt update && apt -y upgrade && apt -y install wget
         wget https://get.gear.rs/gear-nightly-linux-x86_64.tar.xz
 	tar xvf gear-nightly-linux-x86_64.tar.xz
@@ -56,6 +57,7 @@ uninstall)
 	echo "Удаление завершено"
         ;;
 update)
+	cd $HOME
 	wget https://get.gear.rs/gear-nightly-linux-x86_64.tar.xz
         tar xvf gear-nightly-linux-x86_64.tar.xz
         rm gear-nightly-linux-x86_64.tar.xz
