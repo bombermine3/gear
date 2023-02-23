@@ -23,7 +23,7 @@ install)
 	read -p "Введите имя ноды: " GEAR_NODE_NAME
 	echo 'export GEAR_NODE_NAME="'${GEAR_NODE_NAME}'"' >> $HOME/.bash_profile
 	source $HOME/.bash_profile
-        printf "[Unit]
+	printf "[Unit]
 Description=Gear Node
 After=network.target
 
@@ -48,31 +48,32 @@ WantedBy=multi-user.target" > /etc/systemd/system/gear-node.service
 	echo "Сделайте бэкап приватных ключей: bash gear.sh backup"
 	;;
 uninstall)
-        systemctl stop gear-node
+	systemctl stop gear-node
 	systemctl disable gear-node
 	rm /etc/systemd/system/gear-node.service
 	rm /usr/local/bin/gear
 	rm -rf /root/.local/share/gear
 
 	echo "Удаление завершено"
-        ;;
+	;;
 update)
 	cd $HOME
 	wget https://get.gear.rs/gear-nightly-linux-x86_64.tar.xz
-        tar xvf gear-nightly-linux-x86_64.tar.xz
-        rm gear-nightly-linux-x86_64.tar.xz
+	tar -xvf gear-nightly-linux-x86_64.tar.xz -C /usr/local/bin
+	rm gear-nightly-linux-x86_64.tar.xz
 	systemctl stop gear-node
-        mv gear /usr/local/bin
+	mkdir -p /root/.local/share/gear/chains/gear_staging_testnet_v6/network
+	cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/* /root/.local/share/gear/chains/gear_staging_testnet_v6/network/
 	systemctl start gear-node
 
 	echo "Обновление завершено"
-        ;;
+	;;
 backup)
 	mkdir /root/gear_backup > /dev/null 2>&1
-        cd /root/gear_backup
-        hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 > private.txt
-        cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/secret_ed25519 ./secret_ed25519
-        echo "Бэкап приватных ключей находится в /root/gear_backup"
+	cd /root/gear_backup
+	hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v6/network/secret_ed25519 > private.txt
+	cp /root/.local/share/gear/chains/gear_staging_testnet_v6/network/secret_ed25519 ./secret_ed25519
+	echo "Бэкап приватных ключей находится в /root/gear_backup"
 	;;
 esac
 
