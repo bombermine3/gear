@@ -63,7 +63,7 @@ update)
 	rm gear-nightly-linux-x86_64.tar.xz
 	systemctl stop gear-node
 	mkdir -p /root/.local/share/gear/chains/gear_staging_testnet_v6/network
-	cp /root/.local/share/gear/chains/gear_staging_testnet_v5/network/* /root/.local/share/gear/chains/gear_staging_testnet_v6/network/
+	cp /root/.local/share/gear/chains/gear_staging_testnet_v6/network/* /root/.local/share/gear/chains/gear_staging_testnet_v7/network/
 	systemctl start gear-node
 
 	echo "Обновление завершено"
@@ -71,8 +71,8 @@ update)
 backup)
 	mkdir /root/gear_backup > /dev/null 2>&1
 	cd /root/gear_backup
-	hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v6/network/secret_ed25519 > private.txt
-	cp /root/.local/share/gear/chains/gear_staging_testnet_v6/network/secret_ed25519 ./secret_ed25519
+	hexdump -e '1/1 "%02x"' /root/.local/share/gear/chains/gear_staging_testnet_v7/network/secret_ed25519 > private.txt
+	cp /root/.local/share/gear/chains/gear_staging_testnet_v7/network/secret_ed25519 ./secret_ed25519
 	echo "Бэкап приватных ключей находится в /root/gear_backup"
 	;;
 esac
